@@ -1,16 +1,33 @@
 import React from 'react'
+import Input_field1 from '../components/Input_field1'
+import LoginBtn from '../components/LoginBtn'
 
 function Login() {
   return (
-    <div className='flex-col w-screen min-h-screen bg-white items-center justify-center'>
-        <div className='w-[15vh]'>
+    <div className='flex-col w-screen min-h-screen bg-gradient-to-bl from-[#EEEEEE] to-[#91ADC8] flex items-center justify-start'>
+        {/* logo panel */}
+        <div className='w-[20vh] self-start'>
             <img src="https://toppng.com/uploads/preview/google-logo-no-background-11659866412d1ppqm7mr6.png" alt="logo" className='p-4 pb-6 pt-2' />
         </div>
 
-        <div className='w-screen h-[85vh] bg-white flex items-start justify-center pt-10'>
-            <div className='w-[35%] h-[50vh] bg-black flex items-start justify-center rounded rounded-xl'>
-                text here
-            </div>
+        {/* display card panel */}
+        <div className='w-[35%] h-[50vh] bg-[#96B6C5] border border-white-300 rounded rounded-xl flex-col flex items-center justify-start shadow-xl'>
+          {/* user text */}
+          <div className='pt-4 flex flex-col items-center justify-center'>
+            <h1 className='text-3xl font-bold font-azonix'>User Login</h1>
+            <span className='text-xs font-montsterat font-bold'>welcome back user</span>
+          </div>
+
+          {/* Login input field */}
+          <div className='w-full flex flex-col items-center justify-center m-2'>
+            <Input_field1 label='Username' type='text' placeholder='username' />
+            <Input_field1 label='Password' type='password' placeholder='password' />
+          </div>
+             <LoginBtn label='login' />
+             <div className='w-[80%] flex m-2 items-center justify-between'>
+              <h3 className='font-montsterat text-xs font-bold self-start ml-9 m-4'>New here ? <button className='text-blue-900 font-bold hover:text-purple-900' >create account</button></h3>
+              <h3 className='font-montsterat text-xs font-bold self-start ml-9 m-4'><button className='text-blue-900 font-bold hover:text-purple-900' >Forgot password ?</button></h3>
+             </div>
         </div>
     </div>
   )

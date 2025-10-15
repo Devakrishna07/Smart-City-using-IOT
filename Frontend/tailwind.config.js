@@ -5,7 +5,13 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}", // Important: make sure this path covers your App.jsx/App.tsx
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily:{
+        campusfont: ['Campusfont', 'sans'],
+        azonix: ['Azonix', 'sans'],
+        montsterat:['Montsterat', 'sans']
+      },
+    },
   },
   plugins: [],
 }
