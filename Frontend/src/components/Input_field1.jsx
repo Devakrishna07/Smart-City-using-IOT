@@ -1,15 +1,19 @@
-import React from 'react'
+// components/Input_field1.jsx
+import React from 'react';
 
-function Input_field1({type = "text", label = "Username", placeholder="username"}) {
+function Input_field1({ label, type = 'text', placeholder, value, onChange }) {
   return (
-    <div className='flex flex-col w-[80%] md:w-[70%] items-center justify-center rounded rounded-xl m-3'>
-      <span className='flex self-start font-azonix text-xs'>{label}</span>
-      <input type={type}
-       placeholder={placeholder}
-       className='w-full rounded-full p-1 shadow-sm font-montsterat font-bold text-xh hover:rounded-md'
-       />
+    <div className="flex flex-col items-start justify-start w-[80%] m-2">
+      <label className="text-xs font-montsterat font-bold mb-1">{label}</label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className="w-full border border-gray-400 rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-400 hover:rounded-xl"
+      />
     </div>
-  )
+  );
 }
 
-export default Input_field1
+export default Input_field1;
