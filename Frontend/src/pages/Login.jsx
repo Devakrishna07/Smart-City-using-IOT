@@ -1,13 +1,14 @@
 import React from 'react'
 import Input_field1 from '../components/Input_field1'
 import LoginBtn from '../components/LoginBtn'
+import logo1 from '../assets/logos/logo1.png'
 
 function Login() {
   return (
     <div className='flex-col w-screen min-h-screen bg-gradient-to-bl from-[#EEEEEE] to-[#91ADC8] flex items-center justify-start'>
         {/* logo panel */}
-        <div className='w-[15vh] md:w-[20vh] self-start'>
-            <img src="https://toppng.com/uploads/preview/google-logo-no-background-11659866412d1ppqm7mr6.png" alt="logo" className='p-4 pb-6 pt-2' />
+        <div className='w-[30%] md:w-[12%] self-start'>
+            <img src={logo1} alt="logo" className='p-4 pb-6 pt-2' />
         </div>
 
         {/* display card panel */}
