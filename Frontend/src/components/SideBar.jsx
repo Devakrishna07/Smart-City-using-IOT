@@ -2,12 +2,7 @@ import React from 'react'
 import logo from '../assets/logos/logo1.png'
 
 
-function SideBar() {
-    const items = [
-    {name:"DashBoard", path:'/'},
-    {name:"Users", path:'/'},
-    {name:"storage", path:'/'}
-]
+function SideBar({items}) {
 
     return (
         <div className='w-[25%] h-screen bg-white flex flex-col items-center justify-start  p-1'>
@@ -26,8 +21,12 @@ function SideBar() {
                 {items.map((item, index) => (
                     <button
                       key={index}
+                      className='w-full shadow-lg h-[6vh] rounded-xl border-gray-200 '
                     >
-                        <img src='' alt="" />
+                        <div className=' flex flex-row items-start justify-start p-1 pl-3 '>
+                            <img src={item.icon} alt={item.name} className='h-[3vh] px-2 hover:shadow-xl hover:rounded-xl'/>
+                            <h2 className='font-azonix text-gray-600 hover:text-blue-200 hover:shadow-lg px-2'>{item.name}</h2>
+                        </div>
                     </button>
                 ))}
             </div>
