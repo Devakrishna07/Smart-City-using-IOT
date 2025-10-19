@@ -4,7 +4,7 @@ import React from 'react';
 function Input_field1({ label, type = 'text', placeholder, value, onChange }) {
   return (
     <div className="flex flex-col items-start justify-start w-[80%] m-2">
-      <label className="text-xs font-montsterat font-bold mb-1">{label}</label>
+      <label className="text-xs font-azonix font-bold mb-1">{label}</label>
       <input
         type={type}
         placeholder={placeholder}

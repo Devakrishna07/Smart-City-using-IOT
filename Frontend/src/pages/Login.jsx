@@ -46,12 +46,12 @@ function Login() {
   return (
     <div className="flex-col w-screen min-h-screen bg-gradient-to-bl from-[#EEEEEE] to-[#91ADC8] flex items-center justify-start">
       {/* logo panel */}
-      <div className="w-[30%] md:w-[12%] self-start">
+      <div className="w-[30%]  md:w-[12%] self-start">
         <img src={logo1} alt="logo" className="p-4 pb-6 pt-2" />
       </div>
 
       {/* display card panel */}
-      <div className="w-[95%] md:w-[35%] md:h-[50vh] bg-[#96B6C5] border border-white-300 rounded-xl flex-col flex items-center justify-start shadow-xl pb-6 md:pb-0">
+      <div className="w-[95%] md:w-[35%] h-[50vh] md:h-[50vh] bg-[#96B6C5] border border-white-300 rounded-xl flex-col flex items-center justify-start shadow-xl pb-6 md:pb-0">
         {/* user text */}
         <div className="pt-4 flex flex-col items-center justify-center">
           <h1 className="text-xl md:text-3xl font-bold font-azonix">User Login</h1>
