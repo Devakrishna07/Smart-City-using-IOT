@@ -1,0 +1,33 @@
+cam_module/
+│
+├── app.py                     # Flask app entry point
+├── wsgi.py                    # For production servers (gunicorn)
+├── config.py                  # Environment-based configuration
+├── requirements.txt           # Python dependencies
+├── .env                       # Environment variables (local only)
+├── README.md                  # Module documentation
+│
+├── camera/                    # Camera-related logic
+│   ├── __init__.py
+│   ├── receiver.py            # Receive frames / streams from client
+│   ├── capture.py             # (Optional) Local camera / IP cam capture
+│   ├── throttler.py           # FPS & rate limiting
+│   └── preprocessor.py        # Resize, compress, normalize frames
+│
+├── ai/                        # AI interaction layer
+│   ├── __init__.py
+│   ├── client.py              # Call FastAPI AI service
+│   └── inference.py           # (Prototype only) Local AI inference
+│
+├── services/                  # External service communication
+│   ├── __init__.py
+│   ├── django_client.py       # Send events/results to Django
+│   └── auth.py                # Service token handling
+│
+├── utils/                     # Shared helpers
+│   ├── __init__.py
+│   ├── logger.py              # Central logging
+│   └── validators.py          # Request/frame validation
+│
+└── tests/                     # Basic tests
+    └── test_receiver.py
