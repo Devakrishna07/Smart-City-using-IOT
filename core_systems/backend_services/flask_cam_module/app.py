@@ -1,11 +1,19 @@
-from flask import Flask
+import cv2 as cv 
+import numpy as np 
+import matplotlib as plt
 
-app = Flask(__name__)
+cap = cv.VideoCapture(0)
 
-@app.route("/")
-def home():
-    return "Flask Application is Running 🚀"
+while True :
+    ret,frame = cap.read()
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    if not ret:
+        print('cannot connect')
+        break
+    cv.imshow('video',frame)
+    
+    if cv.waitKey(1) == ord('s'):
+        break
 
+cv.destroyAllwindows()
+    
