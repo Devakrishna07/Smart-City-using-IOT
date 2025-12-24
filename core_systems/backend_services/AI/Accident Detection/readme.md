@@ -69,6 +69,3 @@ Smart-City-using-IOT/
 
 ## 📊 Model Performance
 The CNN model achieves an accuracy of **95%** on the test dataset, demonstrating robust performance in accident detection scenarios.
-
-## 📜 License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
