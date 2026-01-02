@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-purple-700 to-purple-800 relative overflow-hidden">
       {/* Decorative shapes */}
@@ -18,15 +17,33 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <h2 className="text-center text-3xl font-bold text-white">Welcome Back</h2>
+        <h2 className="text-center text-3xl font-bold text-white">
+          Create Account
+        </h2>
         <p className="text-center text-purple-200 mt-2">
-          Sign in to continue to your account
+          Sign up to access the system
         </p>
 
         <form className="mt-8 space-y-5">
+          {/* Name */}
+          <div>
+            <label className="block text-sm text-purple-200 mb-1">
+              Full Name
+            </label>
+            <div className="flex items-center bg-purple-900/60 rounded-lg px-3">
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                className="w-full bg-transparent py-3 text-white placeholder-purple-400 focus:outline-none"
+              />
+            </div>
+          </div>
+
           {/* Email */}
           <div>
-            <label className="block text-sm text-purple-200 mb-1">Email</label>
+            <label className="block text-sm text-purple-200 mb-1">
+              Email
+            </label>
             <div className="flex items-center bg-purple-900/60 rounded-lg px-3">
               <input
                 type="email"
@@ -38,25 +55,30 @@ export default function LoginPage() {
 
           {/* Password */}
           <div>
-            <label className="block text-sm text-purple-200 mb-1">Password</label>
+            <label className="block text-sm text-purple-200 mb-1">
+              Password
+            </label>
             <div className="flex items-center bg-purple-900/60 rounded-lg px-3">
               <input
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Create a password"
                 className="w-full bg-transparent py-3 text-white placeholder-purple-400 focus:outline-none"
               />
             </div>
           </div>
 
-          {/* Options */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-purple-200">
-              <input type="checkbox" className="accent-pink-500" />
-              Remember me
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm text-purple-200 mb-1">
+              Confirm Password
             </label>
-            <a href="#" className="text-pink-400 hover:underline">
-              Forgot password?
-            </a>
+            <div className="flex items-center bg-purple-900/60 rounded-lg px-3">
+              <input
+                type="password"
+                placeholder="Re-enter password"
+                className="w-full bg-transparent py-3 text-white placeholder-purple-400 focus:outline-none"
+              />
+            </div>
           </div>
 
           {/* Button */}
@@ -64,21 +86,20 @@ export default function LoginPage() {
             type="submit"
             className="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 transition"
           >
-            Sign In
+            Sign Up
           </button>
         </form>
 
         {/* Footer */}
         <p className="text-center text-purple-200 text-sm mt-6">
-          Don&apos;t have an account?{" "}
+          Already have an account?{" "}
           <Link
-          to="/signup"
-          className="text-pink-400 font-medium hover:underline"
+            to="/"
+            className="text-pink-400 font-medium hover:underline"
           >
-          Sign up
+            Sign in
           </Link>
         </p>
-
       </div>
     </div>
   );

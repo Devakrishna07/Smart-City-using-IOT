@@ -1,65 +1,78 @@
 import {
-  Home,
-  Car,
   Bell,
   AlertTriangle,
   Settings,
   User,
+  X,
 } from "lucide-react";
 
-export default function SidePanel({ mode, setMode }) {
+export default function SidePanel({ isOpen, onClose }) {
   return (
-    <aside className="w-64 bg-black/30 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col">
-      {/* Logo */}
-      <h1 className="text-2xl font-bold mb-10 text-white">
-        AetherVision
-        <p className="text-sm text-purple-300">
-          Intelligent Vision Sentinel
-        </p>
-      </h1>
-
-      {/* Menu */}
-      <nav className="space-y-3 flex-1">
-        <SidebarItem
-          icon={<Home />}
-          label="Home Surveillance"
-          active={mode === "home"}
-          onClick={() => setMode("home")}
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-40"
+          onClick={onClose}
         />
+      )}
 
-        <SidebarItem
-          icon={<Car />}
-          label="Traffic Monitoring"
-          active={mode === "traffic"}
-          onClick={() => setMode("traffic")}
-        />
+      {/* Side Panel */}
+      <aside
+        className={`
+          fixed top-0 left-0 h-full w-72 z-50
+          bg-gradient-to-b from-slate-900 via-purple-900 to-indigo-900
+          backdrop-blur-xl border-r border-white/10
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+          <div>
+            <h1 className="text-xl font-bold text-white">AetherVision</h1>
+            <p className="text-xs text-purple-300">
+              Intelligent Vision Sentinel
+            </p>
+          </div>
 
-        <SidebarItem icon={<Bell />} label="Notifications" />
-        <SidebarItem icon={<AlertTriangle />} label="Alerts" />
-        <SidebarItem icon={<Settings />} label="Settings" />
-        <SidebarItem icon={<User />} label="Profile" />
-      </nav>
+          <X
+            className="cursor-pointer text-purple-200 hover:text-white"
+            onClick={onClose}
+          />
+        </div>
 
-      <p className="text-xs text-purple-300 text-center">
-        © 2025 AetherVision
-      </p>
-    </aside>
+        {/* Menu */}
+        <nav className="px-4 py-6 space-y-3">
+          <SidebarItem icon={<Bell />} label="Notifications" />
+          <SidebarItem icon={<AlertTriangle />} label="Alerts" />
+          <SidebarItem icon={<Settings />} label="Settings" />
+          <SidebarItem icon={<User />} label="Profile" />
+        </nav>
+
+        {/* Footer */}
+        <div className="absolute bottom-6 w-full text-center text-xs text-purple-300">
+          © 2025 AetherVision
+        </div>
+      </aside>
+    </>
   );
 }
 
-function SidebarItem({ icon, label, active, onClick }) {
+/* ===========================
+   Sidebar Item
+   =========================== */
+
+function SidebarItem({ icon, label }) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition
-        ${
-          active
-            ? "bg-purple-600/40 text-white"
-            : "text-purple-200 hover:bg-white/10"
-        }`}
+    <div
+      className="
+        flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer
+        text-purple-200 hover:bg-white/10 transition
+      "
     >
-      {icon}
+      <span className="text-purple-300">{icon}</span>
       <span>{label}</span>
-    </button>
+    </div>
   );
 }

@@ -1,30 +1,44 @@
-import React from "react";
-import { Bell, LogOut } from "lucide-react";
+import { Menu } from "lucide-react";
 
-export default function Navbar() {
-     return (
-    <nav className="w-full flex items-center justify-between px-8 py-4 bg-white/10 backdrop-blur-md border-b border-white/10">
-      {/* Brand */}
-      <h1 className="text-2xl font-bold tracking-wide text-white">
-        AetherVision
-        <span className="text-purple-400 text-sm ml-2">
-          Intelligent Vision Sentinel
-        </span>
-      </h1>
-
-      {/* Right */}
-      <div className="flex items-center gap-6">
-        <Bell className="text-purple-200 hover:text-white cursor-pointer" />
-
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center font-bold">
-            A
-          </div>
-          <span className="text-sm text-purple-200">Admin</span>
+export default function Navbar({
+  title,
+  subtitle,
+  modes,
+  activeMode,
+  setActiveMode,
+  onMenuClick,
+}) {
+  return (
+    <header className="w-full flex items-center justify-between px-6 py-4 bg-white/10 backdrop-blur-md border-b border-white/10">
+      {/* Left */}
+      <div className="flex items-center gap-4">
+        <Menu
+          className="cursor-pointer text-white"
+          onClick={onMenuClick}
+        />
+        <div>
+          <h2 className="text-xl font-bold">{title}</h2>
+          <p className="text-sm text-purple-300">{subtitle}</p>
         </div>
-
-        <LogOut className="text-red-400 hover:text-red-500 cursor-pointer" />
       </div>
-    </nav>
+
+      {/* Modes */}
+      <div className="flex gap-2 bg-black/30 p-1 rounded-lg">
+        {modes.map((mode) => (
+          <button
+            key={mode.id}
+            onClick={() => setActiveMode(mode)}
+            className={`px-4 py-1.5 rounded-md text-sm transition
+              ${
+                activeMode.id === mode.id
+                  ? "bg-purple-600 text-white"
+                  : "text-purple-200 hover:bg-white/10"
+              }`}
+          >
+            {mode.name}
+          </button>
+        ))}
+      </div>
+    </header>
   );
 }
