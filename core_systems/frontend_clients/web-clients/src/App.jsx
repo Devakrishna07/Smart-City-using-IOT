@@ -9,17 +9,13 @@ import Profile from './pages/Profile'
 const App = () => {
   return (
     <BrowserRouter>
-    <div className='overflow-y-hidden'>
       <Routes>
         <Route path='/' element={<Login />}  />
         <Route path="/signup" element={<Signup />} />
         <Route path='/dashboard' element={<Home />}  />
         <Route path='/settings' element={<Settings />}  />
         <Route path='/profile' element={<Profile />}  />
-        
       </Routes>
-    </div>
-     
     </BrowserRouter>
   )
 }
