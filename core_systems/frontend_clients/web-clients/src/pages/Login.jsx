@@ -1,10 +1,42 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../api/apiService";
 
 export default function LoginPage() {
   const [focusedField, setFocusedField] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    email: "",
+    password:"",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const[error, setError] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try{
+      const response = await loginUser(formData);
+
+      const {access} = response.data;
+
+      localStorage.setItem("token", access);
+
+      navigate("/dashboard");
+    }catch (err){
+      setError(
+        err.response?.data?.detail || "invalid email or password"
+      );
+    }finally{
+      setLoading(false);
+    }
+  };
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-purple-700 to-purple-800 relative overflow-hidden">
       {/* Animated background elements */}
@@ -101,11 +133,11 @@ export default function LoginPage() {
               Enter your credentials to continue
             </p>
 
-            <form className="space-y-4">
-              {/* Email */}
+            <form className="space-y-4" onSubmit={handleLogin} >
+              {/* Username */}
               <div className="transform transition-all duration-300 hover:translate-x-1">
                 <label className="block text-sm font-medium text-purple-200 mb-1.5">
-                  Email Address
+                  Username
                 </label>
                 <div
                   className={`bg-white/5 rounded-xl px-4 border-2 transition-all duration-300
@@ -132,7 +164,10 @@ export default function LoginPage() {
                       />
                     </svg>
                     <input
-                      type="email"
+                      type="text"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email:e.target.value})}
+                      required
                       placeholder="you@example.com"
                       onFocus={() => setFocusedField("email")}
                       onBlur={() => setFocusedField(null)}
@@ -173,6 +208,9 @@ export default function LoginPage() {
                     </svg>
                     <input
                       type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={(e) => setFormData({...formData, password:e.target.value})}
+                      required
                       placeholder="Enter your password"
                       onFocus={() => setFocusedField("password")}
                       onBlur={() => setFocusedField(null)}
@@ -217,16 +255,22 @@ export default function LoginPage() {
                 </a>
               </div>
 
+              {/* error message */}
+              {error && (
+               <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-2"> {error} </div>
+              )}
+
               {/* Button */}
               <button
                 type="submit"
+                disabled={loading}
                 className="relative w-full py-3 rounded-xl font-semibold text-white overflow-hidden
                            group transition-all duration-300 hover:scale-[1.02] active:scale-95"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 transition-transform duration-300 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative flex items-center justify-center gap-2">
-                  Sign In
+                  {loading ? "Signing in....." : "Sign In"}
                   <svg
                     className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-1"
                     fill="none"

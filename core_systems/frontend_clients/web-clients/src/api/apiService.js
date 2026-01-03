@@ -22,3 +22,7 @@ export const updateData = (endpoint, id, data) => {
 export const deleteData = (endpoint, id) => {
   return axiosInstance.delete(`${endpoint}/${id}`);
 };
+
+export const loginUser = (data) =>{
+    return axiosInstance.post("/auth/token/", data);
+};
