@@ -1,0 +1,17 @@
+backend/
+├── core/
+├── Authentication & user/
+├── households/
+├── devices/
+├── streams/
+├── ai_engine/
+├── events/
+├── traffic/
+├── notifications/
+├── realtime/
+├── media_store/
+├── audit/
+├── config/
+├── tasks/
+├── admin_tools/
+└── manage.py
