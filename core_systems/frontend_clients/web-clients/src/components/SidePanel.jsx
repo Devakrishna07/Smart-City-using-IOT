@@ -1,3 +1,4 @@
+// SidePanel.jsx
 import {
   Bell,
   AlertTriangle,
@@ -9,6 +10,7 @@ import {
   Shield,
   Camera,
 } from "lucide-react";
+import { Link } from "react-router-dom"; // Import Link
 
 export default function SidePanel({ isOpen, onClose }) {
   return (
@@ -65,14 +67,26 @@ export default function SidePanel({ isOpen, onClose }) {
 
         {/* Navigation Menu */}
         <nav className="relative z-10 px-4 py-6 space-y-2">
-          <SidebarItem icon={<Home />} label="Dashboard" active />
+          {/* Use Link for Dashboard */}
+          <Link to="/" onClick={onClose}>
+            <SidebarItem icon={<Home />} label="Dashboard" active={false} />
+          </Link>
+          
           <SidebarItem icon={<Camera />} label="Cameras" badge="24" />
           <SidebarItem icon={<Bell />} label="Notifications" badge="5" />
           <SidebarItem icon={<AlertTriangle />} label="Alerts" badge="2" />
           <SidebarItem icon={<BarChart3 />} label="Analytics" />
           <SidebarItem icon={<Shield />} label="Security" />
-          <SidebarItem icon={<Settings />} label="Settings" />
-          <SidebarItem icon={<User />} label="Profile" />
+          
+          {/* Use Link for Settings */}
+          <Link to="/settings" onClick={onClose}>
+            <SidebarItem icon={<Settings />} label="Settings" />
+          </Link>
+          
+          {/* Use Link for Profile */}
+          <Link to="/profile" onClick={onClose}>
+            <SidebarItem icon={<User />} label="Profile" />
+          </Link>
         </nav>
 
         {/* Status Section */}
@@ -176,6 +190,11 @@ function SidebarItem({ icon, label, active, badge }) {
     </div>
   );
 }
+
+/* ===========================
+   Status Bar Component
+   =========================== */
+// ... (keep the existing StatusBar component)
 
 /* ===========================
    Status Bar Component

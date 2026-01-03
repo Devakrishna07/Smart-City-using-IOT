@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SidePanel from "../components/SidePanel";
 import Navbar from "../components/Navbar";
-import { TrendingUp, TrendingDown, Activity, Eye } from "lucide-react";
+import { TrendingUp, TrendingDown, Activity, Eye, X } from "lucide-react";
 
 /* ===========================
    MODES CONFIG (DECLARE ONCE)
@@ -21,6 +21,20 @@ const MODES = [
       { title: "Accident Detected", desc: "NH Junction – Camera 4", color: "text-red-400", time: "2 min ago", severity: "high" },
       { title: "High Traffic Density", desc: "City Center Signal", color: "text-yellow-400", time: "5 min ago", severity: "medium" },
     ],
+    cameraList: Array.from({ length: 24 }, (_, i) => ({
+      id: i + 1,
+      name: `Traffic Cam ${i + 1}`,
+      status: Math.random() > 0.15 ? "active" : "offline",
+      location: [
+        "Highway NH-44", "Main Junction", "City Center", "Ring Road", 
+        "Metro Station", "Bus Stand", "Railway Crossing", "Toll Plaza",
+        "Flyover Bridge", "Signal Point", "Bypass Road", "Airport Road",
+        "Industrial Area", "Market Square", "College Gate", "Hospital Zone",
+        "Stadium Circle", "Beach Road", "Hill Station", "Border Checkpoint",
+        "Port Area", "Express Highway", "Service Lane", "Parking Zone"
+      ][i],
+      type: "Traffic"
+    })),
   },
   {
     id: "home",
@@ -36,26 +50,32 @@ const MODES = [
       { title: "Motion Detected", desc: "Front Door Camera", color: "text-yellow-400", time: "1 min ago", severity: "medium" },
       { title: "Person Detected", desc: "Living Room Camera", color: "text-red-400", time: "3 min ago", severity: "high" },
     ],
+    cameraList: Array.from({ length: 6 }, (_, i) => ({
+      id: i + 1,
+      name: `Home Cam ${i + 1}`,
+      status: Math.random() > 0.1 ? "active" : "offline",
+      location: [
+        "Front Door",
+        "Living Room", 
+        "Backyard",
+        "Garage",
+        "Hallway",
+        "Kitchen"
+      ][i],
+      type: "Home"
+    })),
   },
 ];
-
-/* ===========================
-   CAMERA LIST (DECLARE ONCE)
-   =========================== */
-const CAMERAS = Array.from({ length: 12 }, (_, i) => ({
-  id: i + 1,
-  name: `Camera ${i + 1}`,
-  status: Math.random() > 0.2 ? "active" : "offline",
-  location: i % 2 === 0 ? "Zone A" : "Zone B",
-}));
 
 export default function Home() {
   /* ✅ Hooks ONLY inside component */
   const [activeMode, setActiveMode] = useState(MODES[0]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [bottomPanelOpen, setBottomPanelOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [hoveredCamera, setHoveredCamera] = useState(null);
   const [animateStats, setAnimateStats] = useState(false);
+  const [fullScreenCamera, setFullScreenCamera] = useState(null);
 
   /* ===========================
      AUTO-ROTATE CAMERA FEED
@@ -63,13 +83,20 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setPage((prev) => {
-        const totalPages = Math.ceil(CAMERAS.length / 4);
+        const totalPages = Math.ceil(activeMode.cameraList.length / 4);
         return (prev + 1) % totalPages;
       });
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [activeMode]);
+
+  /* ===========================
+     RESET PAGE WHEN MODE CHANGES
+     =========================== */
+  useEffect(() => {
+    setPage(0); // Reset to first page when switching modes
+  }, [activeMode]);
 
   /* ===========================
      ANIMATE STATS ON MODE CHANGE
@@ -80,7 +107,8 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [activeMode]);
 
-  const totalPages = Math.ceil(CAMERAS.length / 4);
+  const totalPages = Math.ceil(activeMode.cameraList.length / 4);
+  const currentCameras = activeMode.cameraList.slice(page * 4, page * 4 + 4);
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 text-white relative overflow-hidden">
@@ -134,10 +162,10 @@ export default function Home() {
                 <div>
                   <h3 className="text-xl font-semibold flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    Live Feed
+                    Live Feed - {activeMode.name} Cameras
                   </h3>
                   <p className="text-sm text-purple-300 mt-1">
-                    Showing {page * 4 + 1} – {Math.min(page * 4 + 4, CAMERAS.length)} of {CAMERAS.length}
+                    Showing {page * 4 + 1} – {Math.min(page * 4 + 4, activeMode.cameraList.length)} of {activeMode.cameraList.length}
                   </p>
                 </div>
 
@@ -157,7 +185,7 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 lg:gap-4">
-                {CAMERAS.slice(page * 4, page * 4 + 4).map((cam, idx) => (
+                {currentCameras.map((cam, idx) => (
                   <div
                     key={cam.id}
                     onMouseEnter={() => setHoveredCamera(cam.id)}
@@ -167,7 +195,12 @@ export default function Home() {
                       rounded-xl border overflow-hidden
                       bg-gradient-to-br from-black/60 to-black/40
                       transition-all duration-300 cursor-pointer
-                      ${cam.status === "active" ? "border-green-500/30" : "border-red-500/30"}
+                      ${cam.status === "active" 
+                        ? cam.type === "Traffic" 
+                          ? "border-blue-500/30" 
+                          : "border-green-500/30"
+                        : "border-red-500/30"
+                      }
                       ${hoveredCamera === cam.id ? "scale-105 shadow-lg shadow-purple-500/30" : "scale-100"}
                       animate-[fadeIn_0.5s_ease-out]
                     `}
@@ -201,7 +234,13 @@ export default function Home() {
                         ${hoveredCamera === cam.id ? "opacity-100" : "opacity-0"}
                       `}
                     >
-                      <button className="w-full py-2 bg-white/10 backdrop-blur-sm rounded-lg text-sm font-medium hover:bg-white/20 transition-colors">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFullScreenCamera(cam);
+                        }}
+                        className="w-full py-2 bg-white/10 backdrop-blur-sm rounded-lg text-sm font-medium hover:bg-white/20 transition-colors"
+                      >
                         View Full Screen
                       </button>
                     </div>
@@ -213,6 +252,15 @@ export default function Home() {
                         <span className="text-xs text-red-400 font-medium">REC</span>
                       </div>
                     )}
+
+                    {/* Camera Type Badge */}
+                    <div className={`absolute bottom-2 left-2 px-2 py-1 rounded-full backdrop-blur-sm text-xs font-medium ${
+                      cam.type === "Traffic" 
+                        ? "bg-blue-500/20 border border-blue-500/30 text-blue-400"
+                        : "bg-green-500/20 border border-green-500/30 text-green-400"
+                    }`}>
+                      {cam.type}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -250,13 +298,47 @@ export default function Home() {
 
           {/* QUICK ACTIONS */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <QuickAction icon="📊" label="Analytics" />
-            <QuickAction icon="⚙️" label="Settings" />
-            <QuickAction icon="📁" label="Recordings" />
-            <QuickAction icon="🔔" label="Notifications" />
+            <QuickAction icon="📊" label="Analytics" onClick={() => console.log('Analytics clicked')} />
+            <QuickAction icon="⚙️" label="Settings" onClick={() => setBottomPanelOpen(true)} />
+            <QuickAction icon="📁" label="Recordings" onClick={() => console.log('Recordings clicked')} />
+            <QuickAction icon="🔔" label="Notifications" onClick={() => console.log('Notifications clicked')} />
           </div>
         </main>
       </div>
+
+      {/* Bottom Settings Panel */}
+      <BottomPanel isOpen={bottomPanelOpen} onClose={() => setBottomPanelOpen(false)} />
+
+      {/* Full Screen Camera Modal */}
+      {fullScreenCamera && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center animate-[fadeIn_0.3s_ease-out]">
+          <button
+            onClick={() => setFullScreenCamera(null)}
+            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-xl text-white transition-all duration-300"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          
+          <div className="w-full max-w-6xl mx-4">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-white/10">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-white">{fullScreenCamera.name}</h2>
+                  <p className="text-purple-300">{fullScreenCamera.location}</p>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/20 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-green-400 text-sm font-medium capitalize">{fullScreenCamera.status}</span>
+                </div>
+              </div>
+              
+              <div className="aspect-video bg-black rounded-xl flex items-center justify-center">
+                <Eye className="w-16 h-16 text-purple-400 animate-pulse" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Custom Animations */}
       <style jsx>{`
@@ -376,9 +458,10 @@ function AlertItem({ title, desc, color, time, severity, index }) {
   );
 }
 
-function QuickAction({ icon, label }) {
+function QuickAction({ icon, label, onClick }) {
   return (
     <button
+      onClick={onClick}
       className="
         flex flex-col items-center justify-center gap-2 p-4
         bg-white/5 backdrop-blur-xl rounded-xl border border-white/10
@@ -391,5 +474,136 @@ function QuickAction({ icon, label }) {
         {label}
       </span>
     </button>
+  );
+}
+
+/* ===========================
+   Bottom Panel Component
+   =========================== */
+
+function BottomPanel({ isOpen, onClose }) {
+  return (
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-[fadeIn_0.3s_ease-out]"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Bottom Panel */}
+      <div
+        className={`
+          fixed bottom-0 left-0 right-0 h-96 z-50
+          bg-gradient-to-t from-slate-900 via-purple-900 to-indigo-900
+          backdrop-blur-xl border-t border-white/10
+          shadow-2xl
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? "translate-y-0" : "translate-y-full"}
+        `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+          <h2 className="text-xl font-bold text-white">Quick Settings</h2>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-purple-200 hover:text-white hover:bg-white/10 transition-all duration-200"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="px-6 py-4 overflow-y-auto h-[calc(100%-4rem)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Display Settings */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white mb-3">Display</h3>
+              <SettingItem label="Dark Mode" type="toggle" defaultValue={true} />
+              <SettingItem label="Brightness" type="slider" defaultValue={80} />
+              <SettingItem label="Grid Layout" type="select" options={["2x2", "3x3", "4x4"]} />
+            </div>
+
+            {/* Notifications */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white mb-3">Notifications</h3>
+              <SettingItem label="Motion Alerts" type="toggle" defaultValue={true} />
+              <SettingItem label="Sound Alerts" type="toggle" defaultValue={false} />
+              <SettingItem label="Email Notifications" type="toggle" defaultValue={true} />
+            </div>
+
+            {/* Recording */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white mb-3">Recording</h3>
+              <SettingItem label="Auto-Record" type="toggle" defaultValue={true} />
+              <SettingItem label="Quality" type="select" options={["720p", "1080p", "4K"]} />
+              <SettingItem label="Storage Days" type="slider" defaultValue={30} max={90} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ===========================
+   Setting Item Component
+   =========================== */
+
+function SettingItem({ label, type, defaultValue, options, max = 100 }) {
+  const [value, setValue] = useState(defaultValue);
+
+  return (
+    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm text-purple-200">{label}</span>
+        {type === "toggle" && (
+          <button
+            onClick={() => setValue(!value)}
+            className={`
+              relative w-12 h-6 rounded-full transition-colors duration-300
+              ${value ? "bg-purple-500" : "bg-white/20"}
+            `}
+          >
+            <div
+              className={`
+                absolute top-1 w-4 h-4 rounded-full bg-white
+                transition-transform duration-300
+                ${value ? "translate-x-7" : "translate-x-1"}
+              `}
+            />
+          </button>
+        )}
+      </div>
+      
+      {type === "slider" && (
+        <div>
+          <input
+            type="range"
+            min="0"
+            max={max}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-purple-500"
+          />
+          <span className="text-xs text-purple-400 mt-1">{value}</span>
+        </div>
+      )}
+      
+      {type === "select" && (
+        <select
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="w-full mt-2 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+        >
+          {options.map((option) => (
+            <option key={option} value={option} className="bg-slate-900">
+              {option}
+            </option>
+          ))}
+        </select>
+      )}
+    </div>
   );
 }

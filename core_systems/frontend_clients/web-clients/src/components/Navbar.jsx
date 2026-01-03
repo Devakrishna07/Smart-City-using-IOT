@@ -1,5 +1,7 @@
+// Navbar.jsx
 import { Menu, Search, Bell, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom"; // Import Link
 
 export default function Navbar({
   title,
@@ -9,8 +11,8 @@ export default function Navbar({
   setActiveMode,
   onMenuClick,
 }) {
-  const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   return (
     <header className="relative z-20 bg-white/5 backdrop-blur-xl border-b border-white/10 shadow-lg">
@@ -36,77 +38,41 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-3">
+          {/* Center Section - Search & Modes */}
+          <div className="flex-1 flex items-center justify-center gap-4 mx-8">
             {/* Search Bar */}
-            <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 group">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 group max-w-md w-full">
               <Search className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
               <input
                 type="text"
                 placeholder="Search cameras..."
-                className="bg-transparent text-white placeholder-purple-400 focus:outline-none w-40 lg:w-48 text-sm"
+                className="bg-transparent text-white placeholder-purple-400 focus:outline-none w-full text-sm"
               />
             </div>
 
-            {/* Mode Switcher */}
-            <div className="relative">
-              <button
-                onClick={() => setShowModeDropdown(!showModeDropdown)}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105 group"
-              >
-                <span className="text-sm font-medium text-white">
-                  {activeMode.name}
-                </span>
-                <ChevronDown
-                  className={`w-4 h-4 text-purple-300 transition-transform duration-300 ${
-                    showModeDropdown ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {/* Dropdown */}
-              {showModeDropdown && (
-                <>
-                  <div
-                    className="fixed inset-0 z-30"
-                    onClick={() => setShowModeDropdown(false)}
-                  />
-                  <div className="absolute right-0 mt-2 w-56 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl z-40 overflow-hidden animate-[slideDown_0.3s_ease-out]">
-                    {modes.map((mode, idx) => (
-                      <button
-                        key={mode.id}
-                        onClick={() => {
-                          setActiveMode(mode);
-                          setShowModeDropdown(false);
-                        }}
-                        className={`
-                          w-full px-4 py-3 text-left transition-all duration-200
-                          ${
-                            activeMode.id === mode.id
-                              ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border-l-2 border-purple-500"
-                              : "text-purple-200 hover:bg-white/10 hover:text-white"
-                          }
-                        `}
-                        style={{ animationDelay: `${idx * 50}ms` }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">{mode.name}</p>
-                            <p className="text-xs text-purple-400 mt-0.5">
-                              {mode.cameras} cameras
-                            </p>
-                          </div>
-                          {activeMode.id === mode.id && (
-                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
+            {/* Mode Buttons */}
+            <div className="hidden lg:flex items-center gap-2 bg-white/5 rounded-xl p-1 border border-white/10">
+              {modes.map((mode) => (
+                <button
+                  key={mode.id}
+                  onClick={() => setActiveMode(mode)}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
+                    ${
+                      activeMode.id === mode.id
+                        ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                        : "text-purple-300 hover:text-white hover:bg-white/10"
+                    }
+                  `}
+                >
+                  {mode.name}
+                </button>
+              ))}
             </div>
+          </div>
 
+          {/* Right Section */}
+          <div className="flex items-center gap-3">
             {/* Notifications */}
             <div className="relative">
               <button
@@ -165,13 +131,75 @@ export default function Navbar({
               )}
             </div>
 
-            {/* User Profile */}
-            <button className="flex items-center gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:scale-105 group">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-sm">
-                JD
-              </div>
-              <ChevronDown className="hidden lg:block w-4 h-4 text-purple-300 group-hover:text-white transition-colors" />
-            </button>
+            {/* User Profile Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                className="flex items-center gap-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:scale-105 group"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-sm">
+                  JD
+                </div>
+                <ChevronDown className="hidden lg:block w-4 h-4 text-purple-300 group-hover:text-white transition-colors" />
+              </button>
+
+              {/* Profile Dropdown Menu */}
+              {showProfileDropdown && (
+                <>
+                  <div
+                    className="fixed inset-0 z-30"
+                    onClick={() => setShowProfileDropdown(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-48 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl z-40 overflow-hidden animate-[slideDown_0.3s_ease-out]">
+                    <div className="px-4 py-3 border-b border-white/10">
+                      <p className="text-sm font-medium text-white">John Doe</p>
+                      <p className="text-xs text-purple-300">Administrator</p>
+                    </div>
+                    
+                    <div className="py-1">
+                      {/* Use Link for Profile */}
+                      <Link
+                        to="/profile"
+                        onClick={() => setShowProfileDropdown(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-purple-200 hover:text-white hover:bg-white/10 transition-colors"
+                      >
+                        <User className="w-4 h-4" />
+                        Profile
+                      </Link>
+                      
+                      {/* Use Link for Settings */}
+                      <Link
+                        to="/settings"
+                        onClick={() => setShowProfileDropdown(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-purple-200 hover:text-white hover:bg-white/10 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Settings
+                      </Link>
+                      
+                      <div className="border-t border-white/10 my-1" />
+                      
+                      <button
+                        onClick={() => {
+                          setShowProfileDropdown(false);
+                          // Add logout logic here
+                          console.log("Logout clicked");
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -204,6 +232,10 @@ export default function Navbar({
   );
 }
 
+/* ===========================
+   Notification Item Component
+   =========================== */
+// ... (keep the existing NotificationItem component)
 /* ===========================
    Notification Item Component
    =========================== */
