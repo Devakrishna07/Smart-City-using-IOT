@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL : "https://smart-city-using-iot.onrender.com/" ,
+    baseURL : "https://smart-city-using-iot.onrender.com" ,
     timeout : 10000,
     headers : {
         "Content-Type" : "application/json",

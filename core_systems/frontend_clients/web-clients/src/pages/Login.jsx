@@ -8,7 +8,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password:"",
   });
 
@@ -165,10 +165,10 @@ export default function LoginPage() {
                     </svg>
                     <input
                       type="text"
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email:e.target.value})}
+                      value={formData.username}
+                      onChange={(e) => setFormData({...formData, username:e.target.value})}
                       required
-                      placeholder="you@example.com"
+                      placeholder="username"
                       onFocus={() => setFocusedField("email")}
                       onBlur={() => setFocusedField(null)}
                       className="w-full bg-transparent py-2.5 text-white placeholder-purple-400 focus:outline-none"
