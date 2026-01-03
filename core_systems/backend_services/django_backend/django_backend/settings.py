@@ -169,11 +169,11 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://smart-city-using-iot.vercel.app",
-    "https://smart-city-using-iot-git-vercel-host-devakrishna07s-projects.vercel.app/",
+    "https://smart-city-using-iot-git-vercel-host-devakrishna07s-projects.vercel.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://smart-city-using-iot.vercel.app",
-    "https://smart-city-using-iot-git-vercel-host-devakrishna07s-projects.vercel.app/",
+    "https://smart-city-using-iot-git-vercel-host-devakrishna07s-projects.vercel.app",
 ]
