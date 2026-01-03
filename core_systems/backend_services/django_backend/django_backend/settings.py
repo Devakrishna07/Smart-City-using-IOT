@@ -88,16 +88,18 @@ WSGI_APPLICATION = 'django_backend.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME"),
-         "USER": config("DB_USER"),
+   "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASSWORD"),
         "HOST": config("DB_HOST"),
-        "PORT": config("DB_PORT", default="5432"),
+        "PORT": config("DB_PORT", cast=int),
         "OPTIONS": {
-            "sslmode": "require",   # REQUIRED for Supabase
+            "sslmode": "require",
         },
+        # IMPORTANT for pgBouncer
+        "CONN_MAX_AGE": 0,
     }
 }
 
