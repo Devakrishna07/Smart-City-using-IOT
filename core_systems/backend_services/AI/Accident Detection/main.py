@@ -9,51 +9,14 @@ import requests
 import json
 import base64
 import socket
-from tensorflow.keras.models import load_model
+#from tensorflow.keras.models import load_model
 from keras.models import Sequential
 from keras.layers import Conv2D, BatchNormalization, MaxPooling2D, Flatten, Dense, Dropout
 from fastapi import FastAPI
 from pydantic import BaseModel, field_validator
-
-
-def cnn_model():
-    input_shape = (128,128,1)
-    model = Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', padding='Same', input_shape=input_shape))
-    model.add(BatchNormalization())
-
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', padding='Same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(Conv2D(64, (3, 3), activation='relu', padding='Same'))
-    model.add(BatchNormalization())
-
-    model.add(Conv2D(64, (3, 3), activation='relu', padding='Same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu', padding='Same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(Conv2D(128, (3, 3), activation='relu', padding='Same'))
-    model.add(BatchNormalization())
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(Flatten())
-
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(2, activation='softmax'))
-
-    return model
-
-model = cnn_model()
-model.load_weights("./car_accident_model.weights.h5")
-classNames = ['Accident','Not Accident']
+import tensorflow as tf
+model = tf.keras.models.load_model('./accident_recognition_model_1.keras')
+classNames = ['minor','moderate','major']
 
 app = FastAPI()
 
@@ -64,20 +27,67 @@ def log_response_to_file(response_data):
 class RequestModel(BaseModel):
     body: str
 
-@app.post("/validate_body")
-async def validate_body(request: RequestModel):  # Length of the starting format
-    payload = request.body  # Extract only the inner content
+import base64
+import cv2
+from collections import deque
+
+FRAME_COUNT = 30
+
+prev_gray = None
+flow_buffer = deque(maxlen=FRAME_COUNT - 1)
+
+async def validate_body(request: RequestModel):
+
+    global prev_gray, flow_buffer
+
+    # 1️⃣ Decode incoming frame
+    payload = request.body
     decoded_bytes = base64.b64decode(payload)
     nparray = np.frombuffer(decoded_bytes, np.uint8)
     raw_frame = cv2.imdecode(nparray, cv2.IMREAD_COLOR)
-    gray_frame = cv2.cvtColor(raw_frame, cv2.COLOR_BGR2GRAY)
-    resized_frame = cv2.resize(gray_frame, (128, 128))
-    normalized_frame = resized_frame.astype("float32") / 255.0
-    final_frame = np.expand_dims(np.expand_dims(normalized_frame, axis=0), axis=-1)
-    prediction = model.predict(final_frame)
-    result_index = np.argmax(prediction)
-    status = classNames[result_index]
+
+    if raw_frame is None:
+        return {"error": "Invalid frame"}
+
+    # 2️⃣ Preprocess frame (same as training)
+    gray = cv2.cvtColor(raw_frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.resize(gray, (128, 128))
+
+    # 3️⃣ Compute optical flow (if previous frame exists)
+    if prev_gray is not None:
+        flow = cv2.calcOpticalFlowFarneback(
+            prev_gray, gray,
+            None, 0.5, 3, 15, 3, 5, 1.2, 0
+        )
+
+        # Normalize (SAME AS TRAINING)
+        mean = np.mean(flow, axis=(0, 1))
+        std = np.std(flow, axis=(0, 1))
+        flow = (flow - mean) / (std + 1e-6)
+
+        flow_buffer.append(flow)
+
+    prev_gray = gray
+
+    # 4️⃣ If not enough frames yet → wait
+    if len(flow_buffer) < FRAME_COUNT - 1:
+        return {
+            "prediction": "Collecting frames",
+            "confidence": "0.00%",
+            "alert_triggered": False
+        }
+
+    # 5️⃣ Prepare model input
+    input_tensor = np.array(flow_buffer, dtype=np.float32)
+    input_tensor = np.expand_dims(input_tensor, axis=0)  # (1, 29, 128, 128, 2)
+
+    # 6️⃣ Model inference
+    prediction = model.predict(input_tensor, verbose=0)
+
+    result_index = int(np.argmax(prediction))
     confidence = float(np.max(prediction)) * 100
+    status = classNames[result_index]
+
     return {
         "prediction": status,
         "confidence": f"{confidence:.2f}%",
