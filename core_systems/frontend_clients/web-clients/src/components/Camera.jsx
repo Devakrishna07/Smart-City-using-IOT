@@ -227,6 +227,25 @@ export function CameraGrid({
   );
 }
 
+/* ================= CAMERA LIST ================= */
+
+export function CameraList({ cameras, onCameraClick, size = "md" }) {
+  return (
+    <div className="flex flex-col gap-4">
+      {cameras.map((camera, idx) => (
+        <div key={camera.id} className="w-full">
+          <Camera
+            camera={camera}
+            onFullScreen={onCameraClick}
+            animationDelay={idx * 50}
+            size={size}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ================= ANIMATION ================= */
 
 if (typeof document !== "undefined") {
