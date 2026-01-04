@@ -32,7 +32,7 @@ export default function Profile() {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const [userData, setUserData] = useState({
-    name: "John Doe",
+    name: "John Due",
     email: "john.doe@example.com",
     phone: "+1 (555) 123-4567",
     location: "San Francisco, CA",

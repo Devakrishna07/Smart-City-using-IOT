@@ -5,6 +5,7 @@ import Signup from './pages/Signup'
 import Home from './pages/Home'
 import Settings from './pages/Settings'
 import Profile from './pages/Profile'
+import Cameras from './pages/Cameras' 
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path='/' element={<Login />}  />
         <Route path="/signup" element={<Signup />} />
         <Route path='/dashboard' element={<Home />}  />
+        <Route path='/cameras' element={<Cameras />}  />
         <Route path='/settings' element={<Settings />}  />
         <Route path='/profile' element={<Profile />}  />
       </Routes>

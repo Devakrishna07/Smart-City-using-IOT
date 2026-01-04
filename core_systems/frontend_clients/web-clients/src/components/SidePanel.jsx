@@ -36,11 +36,9 @@ export default function SidePanel({ isOpen, onClose }) {
           <Link to="/dashboard" onClick={onClose}>
             <SidebarItem icon={<Home />} label="Dashboard" active={false} />
           </Link>
-          <SidebarItem icon={<Camera />} label="Cameras" badge="24" />
-          <SidebarItem icon={<Bell />} label="Notifications" badge="5" />
-          <SidebarItem icon={<AlertTriangle />} label="Alerts" badge="2" />
-          <SidebarItem icon={<BarChart3 />} label="Analytics" />
-          <SidebarItem icon={<Shield />} label="Security" />
+          <Link to="/cameras" onClick={onclose}>
+            <SidebarItem icon={<Camera />} label="Cameras" badge="24" />
+          </Link>
           <Link to="/settings" onClick={onClose}>
             <SidebarItem icon={<Settings />} label="Settings" />
           </Link>
@@ -49,7 +47,7 @@ export default function SidePanel({ isOpen, onClose }) {
           </Link>
         </nav>
 
-        <div className="relative z-10 mx-3 sm:mx-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+        {/* <div className="relative z-10 mx-3 sm:mx-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs sm:text-sm text-purple-300">System Status</span>
             <div className="flex items-center gap-1">
@@ -62,7 +60,7 @@ export default function SidePanel({ isOpen, onClose }) {
             <StatusBar label="Memory" value={62} color="bg-purple-500" />
             <StatusBar label="Storage" value={78} color="bg-pink-500" />
           </div>
-        </div>
+        </div> */}
 
         <div className="absolute bottom-0 left-0 right-0 z-10">
           <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-white/10 bg-black/20 backdrop-blur-sm">
