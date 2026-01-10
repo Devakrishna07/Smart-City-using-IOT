@@ -49,9 +49,19 @@ Smart-City-using-IOT/
 
 2. **Install Dependencies:**
    ```bash
-   pip install -r requirements.txt
+   bash env_install.sh
    ```
-
+   or 
+   
+   For Windows
+   ```bash
+   pip install -r requirements_win.txt
+   ```
+   For Linux
+   ```bash
+   pip install -r requirements_deb.txt
+   ```
+   
 3. **Run the Server:**
    ```bash
    fastapi dev main.py
