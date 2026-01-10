@@ -34,8 +34,9 @@ def stream_raw_frames(video_path, server_url):
             # Send to your FastAPI server
             response = requests.post(server_url, json=payload)
             result_data = response.json()
-            current_status = result_data.get("prediction")
-            confidence = result_data.get("confidence")
+            print(result_data)
+            current_status = result_data.get("label")
+            confidence = result_data.get("probability")
             print(f"Server says: {current_status} ({confidence})")
         except Exception as e:
             print(f"Connection Error: {e}")
@@ -48,5 +49,5 @@ def stream_raw_frames(video_path, server_url):
 
 
 # Usage
-URL = "http://127.0.0.1:8000/validate_body"
+URL = "http://127.0.0.1:8000/predict"
 stream_raw_frames("Accident video.mp4", URL)

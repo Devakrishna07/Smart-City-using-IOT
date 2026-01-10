@@ -1,4 +1,5 @@
 core_systems/backend_services/AI/Accident Detection/.idea/
 core_systems/backend_services/AI/Accident Detection/__pycache__/
 core_systems/backend_services/AI/Accident Detection/accident_2.mp4
-core_systems/backend_services/AI/Accident Detection/accident_recognition_model_1.keras
+core_systems/backend_services/AI/Accident Detection/accident/
+core_systems/backend_services/AI/Accident Detection/det/
