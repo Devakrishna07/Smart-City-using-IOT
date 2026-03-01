@@ -194,12 +194,3 @@ def run_inference(
         "confidence": float(sc_np[abnormal_idx].mean()),
     }
 
-
-result = run_inference(
-    video_path="video/Arrest019_x264.mp4",
-    ckpt_path="checkpoints/last.ckpt",
-    labels_file="ucf_labels.csv",
-    fps=4,
-)
-
-print(result)
