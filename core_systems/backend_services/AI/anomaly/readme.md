@@ -60,9 +60,7 @@ conda activate project_env
 pip install requirements.txt
 ```
 
-If using GPU, install the correct PyTorch version from:
-
-https://pytorch.org/
+Use the [**pretrained checkpoints**](https://drive.google.com/file/d/1kgifxpoVn6EwZUIbZ0DbA8zI88aaVPV3/view?usp=drive_link) for inference: download and extract the zip, then place the `last.ckpt` file from the **ucfcrime** folder into the checkpoints folder.
 
 ---
 
