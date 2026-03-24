@@ -75,7 +75,7 @@ Smart-City-using-IOT/
 5. **Access the API:**
    - Open the link[^1] in your browser to interact with the API documentation.
 
-[^1]: The Link will be provided in the terminal after running the server (usually `http://127.0.0.1:8000/docs`).
+[^1]: The Link will be provided in the terminal after running the server (usually `http://127.0.0.1:8001/docs`).
 
 ## 📊 Model Performance
 The CNN model achieves an accuracy of **95%** on the test dataset, demonstrating robust performance in accident detection scenarios.
