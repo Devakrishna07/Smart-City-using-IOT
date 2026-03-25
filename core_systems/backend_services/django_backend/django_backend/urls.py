@@ -7,4 +7,5 @@ urlpatterns = [
     path("auth/", include("Authentication.urls"), name="Auth"),
     path("alert/", include("alerts.urls"), name="Alerts"),
     path("device/", include("devices.urls"), name="Devices"),
+    path("stream/", include("streams.urls"), name="Streams"),
 ]
